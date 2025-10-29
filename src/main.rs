@@ -9,7 +9,9 @@ use winit::{
 use anyhow::Result;
 
 #[derive(Default)]
-struct App;
+struct App {
+    gpu: Option<Gpu>,
+}
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &winit::event_loop::ActiveEventLoop) {
@@ -19,7 +21,8 @@ impl ApplicationHandler for App {
             .with_inner_size(size.clone())
             .with_resizable(false);
 
-        let _window = event_loop.create_window(attrs).unwrap();
+        let window = event_loop.create_window(attrs).unwrap();
+        self.gpu = Some(pollster::block_on(Gpu::new(window, size)).unwrap());
     }
 
     fn window_event(
