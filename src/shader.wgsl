@@ -8,3 +8,8 @@ fn vs_main(@builtin(vertex_index) vtx_idx: u32) -> @builtin(position) vec4f {
 
     return vec4f(vertex[vtx_idx], 0.0, 1.0);
 }
+
+@fragment
+fn fs_main() -> @location(0) vec4f {
+    return vec4f(0.1, 0.1, 0.5, 1.0);
+}
