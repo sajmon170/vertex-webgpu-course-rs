@@ -16,3 +16,15 @@ explanation is provided in the
 Then install Git either through your package manager on Unix or through the
 installer provided on https://git-scm.com/install/ on Windows.
 
+Then open your terminal and clone this project using the `git` command:
+```bash
+git clone https://github.com/sajmon170/vertex-webgpu-course-rs.git
+```
+
+### Building and running the project
+You can run this project by executing
+```bash
+cargo run
+```
+inside the cloned repository directory. This command will download the necessary
+dependencies and build the project if required.
