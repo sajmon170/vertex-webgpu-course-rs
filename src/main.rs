@@ -54,6 +54,7 @@ struct Gpu {
     device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub config: wgpu::SurfaceConfiguration,
+    pub pipeline: wgpu::RenderPipeline
 }
 
 impl Gpu {
@@ -72,11 +73,14 @@ impl Gpu {
         let config = Self::get_config(&adapter, &surface, size);
         surface.configure(&device, &config);
 
+        let pipeline = Self::get_pipeline(&device, &config);
+
         Ok(Self {
             surface,
             device,
             queue,
             config,
+            pipeline
         })
     }
 
