@@ -31,18 +31,20 @@ impl ApplicationHandler for App {
         _id: winit::window::WindowId,
         event: winit::event::WindowEvent,
     ) {
-        match event {
-            WindowEvent::CloseRequested => {
-                println!("Closing window.");
-                event_loop.exit();
+        if let Some(gpu) = &mut self.gpu {
+            match event {
+                WindowEvent::CloseRequested => {
+                    println!("Closing window.");
+                    event_loop.exit();
+                }
+                WindowEvent::Resized(size) => {
+                    gpu.resize(size);
+                }
+                WindowEvent::RedrawRequested => {
+                    todo!();
+                }
+                _ => (),
             }
-            WindowEvent::Resized(_size) => {
-                todo!();
-            }
-            WindowEvent::RedrawRequested => {
-                todo!();
-            }
-            _ => (),
         }
     }
 }
@@ -115,6 +117,11 @@ impl Gpu {
             view_formats: vec![],
             desired_maximum_frame_latency: 2,
         }
+    }
+
+    pub fn resize(&mut self, size: PhysicalSize<u32>) {
+        self.config.width = size.width;
+        self.config.height = size.height;
     }
 }
 
