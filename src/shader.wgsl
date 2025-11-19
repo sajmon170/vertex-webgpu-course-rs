@@ -15,6 +15,6 @@ fn vs_main(in: VertexInput) -> VertexOutput {
 }
 
 @fragment
-fn fs_main() -> @location(0) vec4f {
-    return vec4f(0.1, 0.1, 0.5, 1.0);
+fn fs_main(in: VertexOutput) -> @location(0) vec4f {
+    return vec4f(in.color, 1.0);
 }
