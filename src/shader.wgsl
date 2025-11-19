@@ -1,3 +1,8 @@
+struct VertexInput {
+    @location(0) pos: vec3f,
+    @location(1) color: vec3f
+};
+
 @vertex
 fn vs_main(@builtin(vertex_index) vtx_idx: u32) -> @builtin(position) vec4f {
     const vertex = array(
