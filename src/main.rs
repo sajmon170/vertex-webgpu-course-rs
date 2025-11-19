@@ -72,6 +72,15 @@ impl Gpu {
         Vertex { pos: [ 0.5,  0.5, 0.0], color: [1.0, 1.0, 1.0] },
     ];
 
+    fn make_vertex_buffer(device: &wgpu::Device, vtx: &[Vertex]) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: "Vertex buffer".into(),
+            size: (vtx.len() * size_of::<Vertex>()) as u64,
+            mapped_at_creation: false,
+            usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::VERTEX
+        })
+    }
+
     pub async fn new(window: Window, size: PhysicalSize<u32>) -> Result<Self> {
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor::default());
         let surface = instance.create_surface(window)?;
