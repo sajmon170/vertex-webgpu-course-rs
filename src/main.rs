@@ -49,6 +49,13 @@ impl ApplicationHandler for App {
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct Vertex {
+    pub pos: [f32; 3],
+    pub color: [f32; 3]
+}
+
 struct Gpu {
     surface: wgpu::Surface<'static>,
     device: wgpu::Device,
