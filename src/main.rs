@@ -64,6 +64,7 @@ struct Gpu {
     pub config: wgpu::SurfaceConfiguration,
     pub pipeline: wgpu::RenderPipeline,
     vertex_buffer: wgpu::Buffer,
+    index_buffer: wgpu::Buffer
 }
 
 impl Gpu {
@@ -112,6 +113,9 @@ impl Gpu {
  
         let vertex_buffer = Self::make_vertex_buffer(&device, Gpu::VERTICES);
         queue.write_buffer(&vertex_buffer, 0, &bytemuck::cast_slice(Gpu::VERTICES));
+
+        let index_buffer = Self::make_index_buffer(&device, Gpu::INDICES);
+        queue.write_buffer(&index_buffer, 0, &bytemuck::cast_slice(Gpu::INDICES));
         
         let config = Self::get_config(&adapter, &surface, size);
         surface.configure(&device, &config);
@@ -124,7 +128,8 @@ impl Gpu {
             queue,
             config,
             pipeline,
-            vertex_buffer
+            vertex_buffer,
+            index_buffer
         })
     }
 
