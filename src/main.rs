@@ -74,6 +74,11 @@ impl Gpu {
         Vertex { pos: [ 0.5,  0.5, 0.0], color: [1.0, 1.0, 1.0] },
     ];
 
+    const INDICES: &[u16] = &[
+        0, 1, 2,
+        1, 2, 3
+    ]; 
+
     fn make_vertex_buffer(device: &wgpu::Device, vtx: &[Vertex]) -> wgpu::Buffer {
         device.create_buffer(&wgpu::BufferDescriptor {
             label: "Vertex buffer".into(),
