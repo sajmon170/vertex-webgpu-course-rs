@@ -88,6 +88,15 @@ impl Gpu {
         })
     }
 
+    fn make_index_buffer(device: &wgpu::Device, idx: &[u16]) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: "Index buffer".into(),
+            size: (idx.len() * size_of::<u16>()) as u64,
+            mapped_at_creation: false,
+            usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::INDEX
+        })
+    }
+
     pub async fn new(window: Window, size: PhysicalSize<u32>) -> Result<Self> {
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor::default());
         let surface = instance.create_surface(window)?;
