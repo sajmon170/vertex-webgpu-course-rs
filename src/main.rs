@@ -65,6 +65,13 @@ struct Gpu {
 }
 
 impl Gpu {
+    const VERTICES: &[Vertex] = &[
+        Vertex { pos: [-0.5, -0.5, 0.0], color: [1.0, 0.0, 0.0] },
+        Vertex { pos: [-0.5,  0.5, 0.0], color: [0.0, 1.0, 0.0] },
+        Vertex { pos: [ 0.5, -0.5, 0.0], color: [0.0, 0.0, 1.0] },
+        Vertex { pos: [ 0.5,  0.5, 0.0], color: [1.0, 1.0, 1.0] },
+    ];
+
     pub async fn new(window: Window, size: PhysicalSize<u32>) -> Result<Self> {
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor::default());
         let surface = instance.create_surface(window)?;
