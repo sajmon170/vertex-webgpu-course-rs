@@ -5,7 +5,8 @@ struct VertexInput {
 
 @vertex
 fn vs_main(in: VertexInput) -> @builtin(position) vec4f {
-    return vec4f(in.pos, 1.0);
+    let ratio = 640.0/480.0;
+    return vec4f(in.pos.x/ratio, in.pos.y, in.pos.z, 1.0);
 }
 
 @fragment
