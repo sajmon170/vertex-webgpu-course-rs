@@ -1,3 +1,4 @@
+use bytemuck::NoUninit;
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
@@ -50,7 +51,7 @@ impl ApplicationHandler for App {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, NoUninit)]
 pub struct Vertex {
     pub pos: [f32; 3],
     pub color: [f32; 3]
@@ -61,7 +62,8 @@ struct Gpu {
     device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub config: wgpu::SurfaceConfiguration,
-    pub pipeline: wgpu::RenderPipeline
+    pub pipeline: wgpu::RenderPipeline,
+    vertex_buffer: wgpu::Buffer,
 }
 
 impl Gpu {
@@ -93,6 +95,10 @@ impl Gpu {
             .await?;
         
         let (device, queue) = Self::get_device(&adapter).await?;
+ 
+        let vertex_buffer = Self::make_vertex_buffer(&device, Gpu::VERTICES);
+        queue.write_buffer(&vertex_buffer, 0, &bytemuck::cast_slice(Gpu::VERTICES));
+        
         let config = Self::get_config(&adapter, &surface, size);
         surface.configure(&device, &config);
 
@@ -103,7 +109,8 @@ impl Gpu {
             device,
             queue,
             config,
-            pipeline
+            pipeline,
+            vertex_buffer
         })
     }
 
