@@ -1,3 +1,5 @@
+@group(0) @binding(0) var<uniform> utime: f32;
+
 struct VertexInput {
     @location(0) pos: vec3f,
     @location(1) color: vec3f
