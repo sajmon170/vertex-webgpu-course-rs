@@ -18,6 +18,7 @@ fn vs_main(in: VertexInput) -> VertexOutput {
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4f {
-    let srgb = pow(in.color, vec3f(2.2));
+    let factor = (sin(utime) + 1.0) / 2.0;
+    let srgb = pow(factor * in.color, vec3f(2.2));
     return vec4f(srgb, 1.0);
 }
