@@ -150,6 +150,22 @@ impl Gpu {
         Ok((device, queue))
     }
 
+    fn get_bind_group_layout(device: &wgpu::Device) -> wgpu::BindGroupLayout {
+        return device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: "Bind group layout".into(),
+            entries: &[wgpu::BindGroupLayoutEntry {
+                binding: 0,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size: None
+                },
+                count: None
+            }]
+        })
+    }
+
     fn get_config(
         adapter: &wgpu::Adapter,
         surface: &wgpu::Surface<'static>,
