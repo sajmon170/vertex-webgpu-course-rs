@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use bytemuck::NoUninit;
 use winit::{
     application::ApplicationHandler,
@@ -58,6 +59,7 @@ pub struct Vertex {
 }
 
 struct Gpu {
+    window: Arc<Window>,
     surface: wgpu::Surface<'static>,
     device: wgpu::Device,
     pub queue: wgpu::Queue,
@@ -99,8 +101,9 @@ impl Gpu {
     }
 
     pub async fn new(window: Window, size: PhysicalSize<u32>) -> Result<Self> {
+        let window = Arc::new(window);
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor::default());
-        let surface = instance.create_surface(window)?;
+        let surface = instance.create_surface(window.clone())?;
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::default(),
@@ -123,6 +126,7 @@ impl Gpu {
         let pipeline = Self::get_pipeline(&device, &config);
 
         Ok(Self {
+            window,
             surface,
             device,
             queue,
@@ -273,6 +277,7 @@ impl Gpu {
         self.queue.submit(std::iter::once(encoder.finish()));
         output.present();
 
+        self.window.request_redraw();
         Ok(())
     }
 }
