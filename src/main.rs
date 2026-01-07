@@ -176,6 +176,15 @@ impl Gpu {
         })
     }
 
+    fn make_uniform_buffer(device: &wgpu::Device) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: "Uniform buffer".into(),
+            size: 4 * size_of::<f32>() as u64,
+            mapped_at_creation: false,
+            usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::UNIFORM
+        })
+    }
+
     fn get_config(
         adapter: &wgpu::Adapter,
         surface: &wgpu::Surface<'static>,
