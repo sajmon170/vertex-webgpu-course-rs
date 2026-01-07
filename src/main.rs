@@ -68,7 +68,8 @@ struct Gpu {
     vertex_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
     uniform_buffer: wgpu::Buffer,
-    bind_group: wgpu::BindGroup
+    bind_group: wgpu::BindGroup,
+    start_time: std::time::Instant
 }
 
 impl Gpu {
@@ -131,6 +132,8 @@ impl Gpu {
 
         let uniform_buffer = Self::make_uniform_buffer(&device);
         let bind_group = Self::get_bind_group(&device, &bind_group_layout, &uniform_buffer);
+        
+        let start_time = std::time::Instant::now();
 
         Ok(Self {
             window,
@@ -142,7 +145,8 @@ impl Gpu {
             vertex_buffer,
             index_buffer,
             uniform_buffer,
-            bind_group
+            bind_group,
+            start_time
         })
     }
 
@@ -332,6 +336,12 @@ impl Gpu {
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
+
+            let time = std::time::Instant::now()
+                .duration_since(self.start_time)
+                .as_secs_f32();
+            self.queue.write_buffer(&self.uniform_buffer, 0, bytemuck::bytes_of(&time));
+            
             render_pass.draw_indexed(0..Gpu::INDICES.len() as u32, 0, 0..1);
         }
 
