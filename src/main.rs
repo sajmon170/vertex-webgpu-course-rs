@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{sync::Arc, num::NonZero};
 use bytemuck::NoUninit;
 use winit::{
     application::ApplicationHandler,
@@ -182,6 +182,22 @@ impl Gpu {
             size: 4 * size_of::<f32>() as u64,
             mapped_at_creation: false,
             usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::UNIFORM
+        })
+    }
+
+    fn get_bind_group(device: &wgpu::Device, layout: &wgpu::BindGroupLayout, uniform: &wgpu::Buffer)
+                      -> wgpu::BindGroup {
+        return device.create_bind_group(&wgpu::BindGroupDescriptor {
+            label: "Bind group".into(),
+            layout: &layout,
+            entries: &[wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                    buffer: &uniform,
+                    offset: 0,
+                    size: NonZero::new((4 * size_of::<f32>()) as u64)
+                })
+            }]
         })
     }
 
