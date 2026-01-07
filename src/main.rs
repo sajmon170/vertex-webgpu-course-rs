@@ -123,7 +123,9 @@ impl Gpu {
         let config = Self::get_config(&adapter, &surface, size);
         surface.configure(&device, &config);
 
-        let pipeline = Self::get_pipeline(&device, &config);
+        let bind_group_layout = Self::get_bind_group_layout(&device);
+        let pipeline_layout = Self::get_pipeline_layout(&device, &bind_group_layout);
+        let pipeline = Self::get_pipeline(&device, &config, &pipeline_layout);
 
         Ok(Self {
             window,
@@ -205,7 +207,9 @@ impl Gpu {
         self.config.height = size.height;
     }
 
-    fn get_pipeline(device: &wgpu::Device, config: &wgpu::SurfaceConfiguration)
+    fn get_pipeline(device: &wgpu::Device,
+                    config: &wgpu::SurfaceConfiguration,
+                    pipeline_layout: &wgpu::PipelineLayout)
                     -> wgpu::RenderPipeline {
         let shader_module = device.create_shader_module(
             wgpu::include_wgsl!("shader.wgsl")
@@ -213,7 +217,7 @@ impl Gpu {
 
         device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: Some("Triangle render"),
-            layout: None,
+            layout: Some(pipeline_layout),
             vertex: wgpu::VertexState {
                 module: &shader_module,
                 entry_point: Some("vs_main"),
