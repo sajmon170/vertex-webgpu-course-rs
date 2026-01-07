@@ -66,7 +66,9 @@ struct Gpu {
     pub config: wgpu::SurfaceConfiguration,
     pub pipeline: wgpu::RenderPipeline,
     vertex_buffer: wgpu::Buffer,
-    index_buffer: wgpu::Buffer
+    index_buffer: wgpu::Buffer,
+    uniform_buffer: wgpu::Buffer,
+    bind_group: wgpu::BindGroup
 }
 
 impl Gpu {
@@ -127,6 +129,9 @@ impl Gpu {
         let pipeline_layout = Self::get_pipeline_layout(&device, &bind_group_layout);
         let pipeline = Self::get_pipeline(&device, &config, &pipeline_layout);
 
+        let uniform_buffer = Self::make_uniform_buffer(&device);
+        let bind_group = Self::get_bind_group(&device, &bind_group_layout, &uniform_buffer);
+
         Ok(Self {
             window,
             surface,
@@ -135,7 +140,9 @@ impl Gpu {
             config,
             pipeline,
             vertex_buffer,
-            index_buffer
+            index_buffer,
+            uniform_buffer,
+            bind_group
         })
     }
 
@@ -324,6 +331,7 @@ impl Gpu {
             render_pass.set_pipeline(&self.pipeline);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+            render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.draw_indexed(0..Gpu::INDICES.len() as u32, 0, 0..1);
         }
 
