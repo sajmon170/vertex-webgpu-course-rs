@@ -166,6 +166,14 @@ impl Gpu {
         })
     }
 
+    fn get_pipeline_layout(device: &wgpu::Device, layout: &wgpu::BindGroupLayout) -> wgpu::PipelineLayout {
+        return device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: "Uniform buffer layout".into(),
+            bind_group_layouts: &[layout],
+            push_constant_ranges: &[]
+        })
+    }
+
     fn get_config(
         adapter: &wgpu::Adapter,
         surface: &wgpu::Surface<'static>,
